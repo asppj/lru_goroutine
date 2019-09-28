@@ -11,9 +11,9 @@ import (
 	"time"
 )
 
-func p(id int,i int) string {
-	now:=time.Now()
-	return fmt.Sprintf("ID:%2d第%v次循环：时间： %v--%v",id, i, now.Format("2006/1/2 15:04:05"),now.UnixNano())
+func p(id int, i int) string {
+	now := time.Now()
+	return fmt.Sprintf("ID:%2d第%v次循环：时间： %v--%v", id, i, now.Format("2006/1/2 15:04:05"), now.UnixNano())
 }
 
 const Cap int = 50
@@ -26,7 +26,7 @@ const GoroutineNum = 200
 func main() {
 	fmt.Printf("缓存容量%d个；随机范围0-%d；协程个数:%d个；单个协程循环次数：%d次;容量/净含量\n",
 		Cap, RandMax, GoroutineNum, Count)
-	lru, cFn := NewGoLRUCache(Cap)
+	lru, cFn := NewGoLRUCache(Cap, nil)
 	group := &sync.WaitGroup{}
 	for i := 0; i < GoroutineNum; i++ {
 		group.Add(1)
@@ -42,8 +42,8 @@ func goP(id int, lru *GoLRUCache, group *sync.WaitGroup) {
 		//rand.Seed(time.Now().UnixNano())
 		//k := rand.Intn(RandMax)
 		ran, _ := rand.Int(rand.Reader, big.NewInt(RandMax))
-		ranStr:=fmt.Sprintf("%v",ran)
-		k,_:=strconv.Atoi(ranStr)
+		ranStr := fmt.Sprintf("%v", ran)
+		k, _ := strconv.Atoi(ranStr)
 		//fmt.Printf("k=%3d ", k)
 		value, ret, err := lru.Get(k)
 		if err != nil {
@@ -53,7 +53,7 @@ func goP(id int, lru *GoLRUCache, group *sync.WaitGroup) {
 			//fmt.Printf("k=%4d使用缓存：%v （%v）\n",k, value, p(id,i))
 			mathed++
 		} else {
-			value = p(id,i)
+			value = p(id, i)
 			if err := lru.Set(k, value); err == nil {
 				//fmt.Printf("k=%4d新缓存：%v \n",k, value)
 			}

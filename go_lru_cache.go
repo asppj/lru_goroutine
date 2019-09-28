@@ -20,24 +20,24 @@ type getResultNode struct {
 type GoLRUCache struct {
 	lruCache    *LRUCache
 	setCh       chan nodeGoLRU     //设置缓存
-	setResultCh chan error          //接收设置结果
-	getCh       chan interface{}    //读取缓存
+	setResultCh chan error         //接收设置结果
+	getCh       chan interface{}   //读取缓存
 	getResultCh chan getResultNode //接收读取结果
 }
 
 //NewGoLRUCache New GoLRUCache
-func NewGoLRUCache(cap int) (*GoLRUCache, context.CancelFunc) {
+func NewGoLRUCache(cap int, expire *float64) (*GoLRUCache, context.CancelFunc) {
 	ctx, cancel := context.WithCancel(context.Background())
 	setCh := make(chan nodeGoLRU)
 	setResultCh := make(chan error)
 	getCh := make(chan interface{})
 	getResultCh := make(chan getResultNode)
-
-	goCache := &GoLRUCache{lruCache: NewLruCache(cap),
-		getCh: getCh,
-		getResultCh:getResultCh,
-		setCh: setCh,
-		setResultCh:setResultCh,
+	goCache := &GoLRUCache{
+		lruCache:    NewLruCache(cap, expire),
+		getCh:       getCh,
+		getResultCh: getResultCh,
+		setCh:       setCh,
+		setResultCh: setResultCh,
 	}
 	go func() {
 	Loop:
@@ -90,4 +90,3 @@ func (g *GoLRUCache) getHandle(k interface{}) {
 	v, ret, err := g.lruCache.Get(k)
 	g.getResultCh <- getResultNode{Value: v, Ret: ret, Err: err}
 }
-
