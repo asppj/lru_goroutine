@@ -4,8 +4,6 @@
     <list default="true" id="dcbfdef9-0620-473f-9905-1c04f0239116" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example.go" beforeDir="false" afterPath="$PROJECT_DIR$/example.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go_lru_cache.go" beforeDir="false" afterPath="$PROJECT_DIR$/go_lru_cache.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lru_cache.go" beforeDir="false" afterPath="$PROJECT_DIR$/lru_cache.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -85,7 +83,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
@@ -100,15 +100,10 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/lru_cache.go</url>
-          <line>84</line>
+          <line>86</line>
           <option name="timeStamp" value="65" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="GoApplicationRunConfiguration">
-        <watch expression="" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>

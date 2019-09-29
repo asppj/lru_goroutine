@@ -48,7 +48,9 @@ func (lru *LRUCache) Set(k, v interface{}) error {
 	//mNode 是list.Element结构
 	if mNode, ok := lru.cacheMap[k]; ok {
 		lru.linkedList.MoveToFront(mNode)
-		mNode.Value.(*cacheNode).Value = v
+		cacheP := mNode.Value.(*cacheNode)
+		cacheP.CreateTime = time.Now()
+		cacheP.Value = v
 		return nil
 	}
 	//直接添加新节点 返回值为list.Element结构
