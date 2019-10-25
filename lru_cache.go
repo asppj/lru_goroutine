@@ -6,46 +6,46 @@ import (
 	"time"
 )
 
-const ExpireMinute int = 10
-
-//cacheNode 节点
+// cacheNode 节点
 type cacheNode struct {
 	Key, Value interface{}
 	CreateTime time.Time
 }
 
-//newCacheNode 新建节点
+// newCacheNode 新建节点
 func newCacheNode(k, v interface{}) *cacheNode {
 	createTime := time.Now()
 	return &cacheNode{k, v, createTime}
 }
 
-//LRUCache LRU缓存
+// LRUCache LRU缓存
 type LRUCache struct {
 	Capacity   int
 	linkedList *list.List
 	cacheMap   map[interface{}]*list.Element
-	Expire     *float64 //过期时间 time.Minute；nil不过期
+	Expire     *float64 // 过期时间 time.Minute；nil不过期
 }
 
-//NewLruCache 新建 LRUCache
-func NewLruCache(cap int, expire *float64) *LRUCache {
-	return &LRUCache{Capacity: cap, linkedList: list.New(), cacheMap: make(map[interface{}]*list.Element), Expire: expire}
+// NewLruCache 新建 LRUCache
+// caps 容量
+// expire 有效期，分钟。nil不失效
+func NewLruCache(caps int, expire *float64) *LRUCache {
+	return &LRUCache{Capacity: caps, linkedList: list.New(), cacheMap: make(map[interface{}]*list.Element), Expire: expire}
 }
 
-//Size 元素个数
+// Size 元素个数
 func (lru *LRUCache) Size() int {
 	return lru.linkedList.Len()
 }
 
-//Set 设置缓存
+// Set 设置缓存
 func (lru *LRUCache) Set(k, v interface{}) error {
-	//异常
+	// 异常
 	if lru.linkedList == nil {
 		return errors.New("linkedList未初始化")
 	}
-	//修改已存在节点
-	//mNode 是list.Element结构
+	// 修改已存在节点
+	// mNode 是list.Element结构
 	if mNode, ok := lru.cacheMap[k]; ok {
 		lru.linkedList.MoveToFront(mNode)
 		cacheP := mNode.Value.(*cacheNode)
@@ -53,14 +53,14 @@ func (lru *LRUCache) Set(k, v interface{}) error {
 		cacheP.Value = v
 		return nil
 	}
-	//直接添加新节点 返回值为list.Element结构
+	// 直接添加新节点 返回值为list.Element结构
 	newEle := &list.Element{}
 	newEle = lru.linkedList.PushFront(newCacheNode(k, v))
 	lru.cacheMap[k] = newEle
-	//超过容量弹出最后一个（最少使用）
+	// 超过容量弹出最后一个（最少使用）
 	if lru.Size() > lru.Capacity {
 		lastNode := lru.linkedList.Back()
-		//几乎不会发生；容量是0的时候考虑下
+		// 几乎不会发生；容量是0的时候考虑下
 		if lastNode == nil {
 			return nil
 		}
@@ -71,7 +71,7 @@ func (lru *LRUCache) Set(k, v interface{}) error {
 	return nil
 }
 
-//Get 取值
+// Get 取值
 func (lru *LRUCache) Get(k interface{}) (v interface{}, ret bool, err error) {
 
 	if lru.cacheMap == nil {
@@ -79,7 +79,7 @@ func (lru *LRUCache) Get(k interface{}) (v interface{}, ret bool, err error) {
 	}
 
 	if ele, ok := lru.cacheMap[k]; ok {
-		//设置了过期时间
+		// 设置了过期时间
 		if lru.Expire != nil {
 			createTime := ele.Value.(*cacheNode).CreateTime
 			expire := time.Now().Sub(createTime).Minutes()
@@ -94,7 +94,7 @@ func (lru *LRUCache) Get(k interface{}) (v interface{}, ret bool, err error) {
 	return v, false, nil
 }
 
-//Remove 移除指定元素
+// Remove 移除指定元素
 func (lru *LRUCache) Remove(k interface{}) bool {
 
 	if lru.cacheMap == nil {
